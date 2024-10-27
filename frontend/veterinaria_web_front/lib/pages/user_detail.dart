@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:veterinaria_web_front/design/app_colors.dart';
 
 class UserDetail extends StatefulWidget {
   final int idusuario; // Cambiado a int para el ID del usuario
@@ -13,9 +14,9 @@ class UserDetail extends StatefulWidget {
 
 class _UserDetailState extends State<UserDetail> {
   final _idUsuarioController = TextEditingController();
-  final _nombreUsuarioController = TextEditingController();
   final _nombreController = TextEditingController();
   final _apellidoController = TextEditingController();
+  final _correoController = TextEditingController();
   final _passwordController = TextEditingController();
   
   bool _isLoading = true;
@@ -38,7 +39,7 @@ class _UserDetailState extends State<UserDetail> {
         
         // Inicializa los controladores con los datos del usuario
         _idUsuarioController.text = usuarioData['idusuario'].toString();
-        _nombreUsuarioController.text = usuarioData['correo']; // Asumiendo que 'correo' es el nombre de usuario
+        _correoController.text = usuarioData['correo']; // Asumiendo que 'correo' es el nombre de usuario
         _nombreController.text = usuarioData['nombre'];
         _apellidoController.text = usuarioData['apellido'];
       } else {
@@ -70,10 +71,10 @@ class _UserDetailState extends State<UserDetail> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'nombre_usuario': _nombreUsuarioController.text,
           'nombre': _nombreController.text,
           'apellido': _apellidoController.text,
-          'password': _passwordController.text,
+          'correo': _correoController.text,
+          'clave': _passwordController.text,
         }),
       );
 
@@ -125,21 +126,23 @@ class _UserDetailState extends State<UserDetail> {
   }
 
   void _showDeleteConfirmationDialog() {
+     var colors = Theme.of(context).extension<AppColors>()!;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Confirmar Eliminación'),
-          content: Text('¿Estás seguro de que deseas eliminar al usuario ?'),
+          content: Text('¿Estás seguro de que deseas eliminar al usuario?'),
           actions: <Widget>[
-            TextButton(
+            ElevatedButton(
               child: Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop(); // Cierra el diálogo
               },
             ),
             TextButton(
-              child: Text('Eliminar'),
+              child: Text('Eliminar', style: TextStyle(color: colors.mainColor)), // Aplicado el estilo aquí
               onPressed: () {
                 Navigator.of(context).pop(); // Cierra el diálogo
                 _eliminarUsuario(); // Llama a la función de eliminar
@@ -156,11 +159,12 @@ class _UserDetailState extends State<UserDetail> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Detalles de Usuario'),
+        backgroundColor: Theme.of(context).extension<AppColors>()!.mainColor,
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
+          : SingleChildScrollView( // Agregado aquí
+              padding: const EdgeInsets.all(50.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -169,33 +173,44 @@ class _UserDetailState extends State<UserDetail> {
                     decoration: InputDecoration(labelText: 'ID de Usuario'),
                     enabled: false, // Hace que el campo sea solo lectura
                   ),
-                  TextField(
-                    controller: _nombreUsuarioController,
-                    decoration: InputDecoration(labelText: 'Nombre de Usuario (Correo)'),
-                  ),
+                  SizedBox(height: 20),
                   TextField(
                     controller: _nombreController,
                     decoration: InputDecoration(labelText: 'Nombre'),
                   ),
+                  SizedBox(height: 20),
                   TextField(
                     controller: _apellidoController,
                     decoration: InputDecoration(labelText: 'Apellido'),
                   ),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: _correoController,
+                    decoration: InputDecoration(labelText: 'Correo Electrónico'),
+                  ),
+                  SizedBox(height: 20),
                   TextField(
                     controller: _passwordController,
                     decoration: InputDecoration(labelText: 'Contraseña'),
                     obscureText: true,
                   ),
                   SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _actualizarUsuario,
-                    child: Text('Actualizar Usuario'),
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _showDeleteConfirmationDialog,
-                    child: Text('Eliminar Usuario'),
-                    //style: ElevatedButton.styleFrom(primary: Colors.red),
+                  Center(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: _actualizarUsuario,
+                          child: Text('Modificar'),
+                        ),
+                        SizedBox(width: 40),
+                        ElevatedButton(
+                          onPressed: _showDeleteConfirmationDialog,
+                          child: Text('Eliminar'),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 20),
                   if (message.isNotEmpty) Text(message, style: TextStyle(color: Colors.red)),

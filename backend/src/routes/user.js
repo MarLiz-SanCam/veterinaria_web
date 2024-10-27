@@ -137,17 +137,17 @@ route.delete('/usuarios/:idusuario', async (req, res) => {
 // //Actualizar usuario usando el proceso almacenado en la base de datos
 route.put('/usuarios/:idusuario', async (req, res) => {
     const { idusuario } = req.params;
-    const { nombre, apellido, email, password } = req.body;
+    const { nombre, apellido, correo, clave } = req.body;
     const p_opcion = 3; 
 
     try {
         await req.dbConnection.query(
-            'SET @opcion = ?, @id_usuario = ?, @nombre = ?, @apellido = ?, @email = ?, @password = ?, @valid = 0, @error = "", @fecha = NOW()', 
-            [p_opcion, idusuario, nombre, apellido, email, password]
+            'SET @opcion = ?, @id_usuario = ?, @nombre = ?, @apellido = ?, @correo = ?, @clave = ?, @valid = 0, @error = "", @fecha = NOW()', 
+            [p_opcion, idusuario, nombre, apellido, correo, clave]
         );
 
         await req.dbConnection.query(
-            'CALL p_opcion(@opcion, @id_usuario, @nombre, @apellido, @email, @password, @valid, @error, @fecha)'
+            'CALL p_opcion(@opcion, @id_usuario, @nombre, @apellido, @correo, @clave, @valid, @error, @fecha)'
         );
 
         const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error, @fecha AS fecha');

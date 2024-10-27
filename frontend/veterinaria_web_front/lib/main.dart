@@ -23,6 +23,12 @@ class MyApp extends StatelessWidget {
        // iconTheme: const IconThemeData(
         //  color: Color.fromARGB(255, 246, 254, 254),
         //),
+        dialogTheme: DialogTheme(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
         inputDecorationTheme: const InputDecorationTheme(
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(

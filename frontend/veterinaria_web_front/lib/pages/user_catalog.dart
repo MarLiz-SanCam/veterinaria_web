@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:veterinaria_web_front/design/app_colors.dart';
+import 'package:veterinaria_web_front/pages/create_user.dart';
 import 'package:veterinaria_web_front/pages/user_detail.dart';
 
 class Usuario {
@@ -114,7 +115,16 @@ class _CatalogoDeUsuariosState extends State<CatalogoDeUsuarios> {
                 ),
                 floatingActionButton: FloatingActionButton(
                   onPressed: () {
-                    // TODO: Implementar la acción del botón
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateUser(),
+                      ),
+                    ).then((shouldRefresh) {
+                      if (shouldRefresh == true) {
+                        _fetchUsuarios();
+                      }
+                    });
                   },
                   backgroundColor: colors.mainColor,
                   child: Icon(Icons.add, color: colors.highlightColor),
