@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Veterinaria Web Front',
       theme: ThemeData.light().copyWith(
+        scaffoldBackgroundColor: Colors.white,
         extensions: const[AppColors(
           dark: Color(0xFF292b2c),
           light: Color(0xFFf3fefe),
@@ -19,10 +20,10 @@ class MyApp extends StatelessWidget {
           secondColor: Color(0xFFb4e6e3),
           highlightColor: Color(0xFFd8eceb),
         )],
+       // iconTheme: const IconThemeData(
+        //  color: Color.fromARGB(255, 246, 254, 254),
+        //),
         inputDecorationTheme: const InputDecorationTheme(
-          /* border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ), */
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Color.fromARGB(255, 107, 164, 163),

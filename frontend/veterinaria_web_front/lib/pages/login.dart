@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:veterinaria_web_front/design/app_colors.dart';
+import 'package:veterinaria_web_front/pages/user_catalog.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
@@ -17,7 +18,7 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   void _loginButtonPressed() async {
-    await _login(); // Llama a la función para iniciar sesión
+    await _login(); 
   }
 
   @override
@@ -26,10 +27,10 @@ class _LogInPageState extends State<LogInPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: colors.mainColor,
-        title: const Text('Carnet veterinario'),
+        title: const Text('Control Veterinario'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(50.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -44,9 +45,21 @@ class _LogInPageState extends State<LogInPage> {
               obscureText: true,
             ),
             const SizedBox(height: 30),
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: _loginButtonPressed, // Cambia aquí
-              child: const Text('Iniciar Sesión'),
+              label:  Text('Iniciar Sesión'),
+              icon: Icon(Icons.login),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CatalogoDeUsuarios()),
+                );
+              },
+              label: const Text('Ver Usuarios'),
+              icon: const Icon(Icons.people),
             ),
           ],
         ),
