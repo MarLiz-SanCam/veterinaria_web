@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:veterinaria_web_front/design/app_colors.dart';
 import 'package:veterinaria_web_front/pages/user_catalog.dart';
 
@@ -14,7 +16,49 @@ class _LogInPageState extends State<LogInPage> {
   final _passwordController = TextEditingController();
 
   Future<void> _login() async {
-    //TODO: Implementar la lógica de inicio de sesión
+    final String correo = _usernameController.text;
+    final String clave = _passwordController.text;
+    final url = 'http://localhost:8000/login';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'correo': correo, 'clave': clave}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        
+        if (data['valid'] == 1) {
+          // Inicio de sesión exitoso
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Inicio de sesión exitoso')),
+          );
+
+          // Navegar a la página de catálogo de usuarios
+          Navigator.push( //TODO: cambiar por las funciones correspondientes de las citas
+            context,
+            MaterialPageRoute(builder: (context) => CatalogoDeUsuarios()),
+          );
+        } else {
+          // Error de validación
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: ${data['error']}')),
+          );
+        }
+      } else {
+        // Error en la solicitud HTTP
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error en el servidor')),
+        );
+      }
+    } catch (e) {
+      // Error de conexión o excepción
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error de conexión: $e')),
+      );
+    }
   }
 
   void _loginButtonPressed() async {
@@ -46,9 +90,9 @@ class _LogInPageState extends State<LogInPage> {
             ),
             const SizedBox(height: 30),
             ElevatedButton.icon(
-              onPressed: _loginButtonPressed, // Cambia aquí
-              label:  Text('Iniciar Sesión'),
-              icon: Icon(Icons.login),
+              onPressed: _loginButtonPressed,
+              label: const Text('Iniciar Sesión'),
+              icon: const Icon(Icons.login),
             ),
             const SizedBox(height: 30),
             ElevatedButton.icon(
