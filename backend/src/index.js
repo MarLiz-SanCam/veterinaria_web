@@ -26,7 +26,13 @@ app.use((req, res, next) => {
     req.dbConnection = dbConnection;
     next();
 });
-app.use(require('./routes/user'));
+app.use('/usuarios',require('./routes/user'));
+app.use('/tratamientos',require('./routes/treatment'));
+app.use('/razas', require('./routes/breed'));
+app.use('/propietarios', require('./routes/owner'));
+app.use('/mascotas', require('./routes/pet'));
+app.use('/especies', require('./routes/specie'));
+app.use('/citas', require('./routes/appointment'));
 
 //Iniciar servidor
 app.listen(app.get('port'), () => {
