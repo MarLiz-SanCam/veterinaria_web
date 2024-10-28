@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -79,7 +81,7 @@ class _CatalogoDeUsuariosState extends State<CatalogoDeUsuarios> {
         backgroundColor: colors.mainColor,
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : usuarios.isEmpty
               ? Center(child: Text(message.isNotEmpty ? message : 'No hay usuarios registrados.'))
               : ListView.builder(

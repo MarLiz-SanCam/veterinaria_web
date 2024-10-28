@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors_in_immutables, library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -132,11 +134,11 @@ class _UserDetailState extends State<UserDetail> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmar Eliminación'),
-          content: Text('¿Estás seguro de que deseas eliminar al usuario?'),
+          title: const Text('Confirmar Eliminación'),
+          content: const Text('¿Estás seguro de que deseas eliminar al usuario?'),
           actions: <Widget>[
             ElevatedButton(
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop(); // Cierra el diálogo
               },
@@ -158,11 +160,11 @@ class _UserDetailState extends State<UserDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles de Usuario'),
+        title: const Text('Detalles de Usuario'),
         backgroundColor: Theme.of(context).extension<AppColors>()!.mainColor,
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView( // Agregado aquí
               padding: const EdgeInsets.all(50.0),
               child: Column(
@@ -170,31 +172,31 @@ class _UserDetailState extends State<UserDetail> {
                 children: [
                   TextField(
                     controller: _idUsuarioController,
-                    decoration: InputDecoration(labelText: 'ID de Usuario'),
+                    decoration: const InputDecoration(labelText: 'ID de Usuario'),
                     enabled: false, // Hace que el campo sea solo lectura
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _nombreController,
-                    decoration: InputDecoration(labelText: 'Nombre'),
+                    decoration: const InputDecoration(labelText: 'Nombre'),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _apellidoController,
-                    decoration: InputDecoration(labelText: 'Apellido'),
+                    decoration: const InputDecoration(labelText: 'Apellido'),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _correoController,
-                    decoration: InputDecoration(labelText: 'Correo Electrónico'),
+                    decoration: const InputDecoration(labelText: 'Correo Electrónico'),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _passwordController,
-                    decoration: InputDecoration(labelText: 'Contraseña'),
+                    decoration: const InputDecoration(labelText: 'Contraseña'),
                     obscureText: true,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Center(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -202,18 +204,18 @@ class _UserDetailState extends State<UserDetail> {
                       children: [
                         ElevatedButton(
                           onPressed: _actualizarUsuario,
-                          child: Text('Modificar'),
+                          child: const Text('Modificar'),
                         ),
-                        SizedBox(width: 40),
+                        const SizedBox(width: 40),
                         ElevatedButton(
                           onPressed: _showDeleteConfirmationDialog,
-                          child: Text('Eliminar'),
+                          child: const Text('Eliminar'),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
-                  if (message.isNotEmpty) Text(message, style: TextStyle(color: Colors.red)),
+                  const SizedBox(height: 20),
+                  if (message.isNotEmpty) Text(message, style: const TextStyle(color: Colors.red)),
                 ],
               ),
             ),

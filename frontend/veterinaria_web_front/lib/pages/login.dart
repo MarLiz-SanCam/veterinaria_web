@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, prefer_const_declarations, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -36,9 +38,7 @@ class _LogInPageState extends State<LogInPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Inicio de sesión exitoso')),
           );
-
-          // Navegar a la página de catálogo de usuarios
-          Navigator.push( //TODO: cambiar por las funciones correspondientes de las citas
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HomePage()),
           );

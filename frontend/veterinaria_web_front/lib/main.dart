@@ -6,6 +6,7 @@ void main() {
   runApp(MyApp());
 }
 
+// ignore: use_key_in_widget_constructors
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
           ),)
       ),
+      // ignore: prefer_const_constructors
       home: LogInPage(),
     );
   }

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+// ignore: use_key_in_widget_constructors
 class CrearCitaPage extends StatefulWidget {
   @override
+  // ignore: library_private_types_in_public_api
   _CrearCitaPageState createState() => _CrearCitaPageState();
 }
 
@@ -43,6 +45,7 @@ class _CrearCitaPageState extends State<CrearCitaPage> {
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
         // Muestra un mensaje de éxito
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(responseBody['message'])),
         );
@@ -50,8 +53,9 @@ class _CrearCitaPageState extends State<CrearCitaPage> {
         _formKey.currentState!.reset();
       } else {
         // Maneja el error
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al crear la cita')),
+          const SnackBar(content: Text('Error al crear la cita')),
         );
       }
     }
@@ -61,7 +65,7 @@ class _CrearCitaPageState extends State<CrearCitaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Crear Cita'),
+        title: const Text('Crear Cita'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -71,7 +75,7 @@ class _CrearCitaPageState extends State<CrearCitaPage> {
             children: [
               TextFormField(
                 controller: _idMascotaController,
-                decoration: InputDecoration(labelText: 'ID de Mascota'),
+                decoration: const InputDecoration(labelText: 'ID de Mascota'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, ingresa el ID de la mascota';
@@ -81,7 +85,7 @@ class _CrearCitaPageState extends State<CrearCitaPage> {
               ),
               TextFormField(
                 controller: _fechaController,
-                decoration: InputDecoration(labelText: 'Fecha (YYYY-MM-DD)'),
+                decoration: const InputDecoration(labelText: 'Fecha (YYYY-MM-DD)'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, ingresa la fecha';
@@ -91,7 +95,7 @@ class _CrearCitaPageState extends State<CrearCitaPage> {
               ),
               TextFormField(
                 controller: _motivoController,
-                decoration: InputDecoration(labelText: 'Motivo'),
+                decoration: const InputDecoration(labelText: 'Motivo'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, ingresa el motivo';
@@ -101,32 +105,32 @@ class _CrearCitaPageState extends State<CrearCitaPage> {
               ),
               TextFormField(
                 controller: _diagnosticoController,
-                decoration: InputDecoration(labelText: 'Diagnóstico'),
+                decoration: const InputDecoration(labelText: 'Diagnóstico'),
               ),
               TextFormField(
                 controller: _pesoController,
-                decoration: InputDecoration(labelText: 'Peso (kg)'),
+                decoration: const InputDecoration(labelText: 'Peso (kg)'),
                 keyboardType: TextInputType.number,
               ),
               TextFormField(
                 controller: _alturaController,
-                decoration: InputDecoration(labelText: 'Altura (cm)'),
+                decoration: const InputDecoration(labelText: 'Altura (cm)'),
                 keyboardType: TextInputType.number,
               ),
               TextFormField(
                 controller: _largoController,
-                decoration: InputDecoration(labelText: 'Largo (cm)'),
+                decoration: const InputDecoration(labelText: 'Largo (cm)'),
                 keyboardType: TextInputType.number,
               ),
               TextFormField(
                 controller: _pagoTotalController,
-                decoration: InputDecoration(labelText: 'Pago Total'),
+                decoration: const InputDecoration(labelText: 'Pago Total'),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _crearCita,
-                child: Text('Crear Cita'),
+                child: const Text('Crear Cita'),
               ),
             ],
           ),

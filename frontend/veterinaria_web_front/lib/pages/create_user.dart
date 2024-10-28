@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_declarations, prefer_const_constructors, use_build_context_synchronously, duplicate_ignore
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -36,6 +38,7 @@ class _CreateUserState extends State<CreateUser> {
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
         if (responseBody['valid'] == 1) {
+          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Usuario creado')));
           Navigator.pop(context); // Regresar a la pantalla anterior si es necesario
         } else {
