@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:veterinaria_web_front/design/app_colors.dart';
+import 'package:veterinaria_web_front/pages/home.dart';
 import 'package:veterinaria_web_front/pages/user_catalog.dart';
 
 class LogInPage extends StatefulWidget {
@@ -39,7 +40,7 @@ class _LogInPageState extends State<LogInPage> {
           // Navegar a la página de catálogo de usuarios
           Navigator.push( //TODO: cambiar por las funciones correspondientes de las citas
             context,
-            MaterialPageRoute(builder: (context) => CatalogoDeUsuarios()),
+            MaterialPageRoute(builder: (context) => HomePage()),
           );
         } else {
           // Error de validación
