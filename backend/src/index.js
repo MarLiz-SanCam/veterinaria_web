@@ -27,6 +27,12 @@ app.use((req, res, next) => {
     next();
 });
 app.use(require('./routes/user'));
+app.use(require('./routes/treatment'));
+app.use(require('./routes/breed'));
+app.use(require('./routes/owner'));
+app.use(require('./routes/pet'));
+app.use(require('./routes/specie'));
+app.use(require('./routes/appointment'));
 
 //Iniciar servidor
 app.listen(app.get('port'), () => {
