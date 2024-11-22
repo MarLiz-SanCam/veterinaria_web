@@ -33,7 +33,6 @@ class _LogInPageState extends State<LogInPage> {
         final data = jsonDecode(response.body);
         
         if (data['valid'] == 1) {
-          // Inicio de sesión exitoso
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Inicio de sesión exitoso')),
           );
@@ -42,19 +41,16 @@ class _LogInPageState extends State<LogInPage> {
             MaterialPageRoute(builder: (context) => HomePage()),
           );
         } else {
-          // Error de validación
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error: ${data['error']}')),
           );
         }
       } else {
-        // Error en la solicitud HTTP
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Error en el servidor')),
         );
       }
     } catch (e) {
-      // Error de conexión o excepción
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error de conexión: $e')),
       );

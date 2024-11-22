@@ -17,7 +17,7 @@ class _CreateUserState extends State<CreateUser> {
   String clave = '';
 
   Future<void> crearUsuario() async {
-    final url = 'http://localhost:8000/usuarios'; // Cambia a tu endpoint
+    final url = 'http://localhost:8000/usuarios'; 
 
     final body = {
       'nombre': nombre,
@@ -40,16 +40,14 @@ class _CreateUserState extends State<CreateUser> {
         if (responseBody['valid'] == 1) {
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Usuario creado')));
-          Navigator.pop(context); // Regresar a la pantalla anterior si es necesario
+          Navigator.pop(context); 
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${responseBody['error']}')));
         }
       } else {
-        // Manejar errores de respuesta
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${response.body}')));
       }
     } catch (e) {
-      // Manejar errores de conexión
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error de conexión: $e')));
     }
   }
@@ -111,7 +109,7 @@ class _CreateUserState extends State<CreateUser> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    crearUsuario(); // Llama a la función para crear el usuario
+                    crearUsuario(); 
                   }
                 },
                 child: Text('Registrar Usuario'),

@@ -11,9 +11,7 @@ class CrearCitaPage extends StatefulWidget {
 
 class _CrearCitaPageState extends State<CrearCitaPage> {
   final _formKey = GlobalKey<FormState>();
-  
-  // Controladores para los campos del formulario
-  final TextEditingController _idMascotaController = TextEditingController();
+   final TextEditingController _idMascotaController = TextEditingController();
   final TextEditingController _fechaController = TextEditingController();
   final TextEditingController _motivoController = TextEditingController();
   final TextEditingController _diagnosticoController = TextEditingController();
@@ -22,11 +20,10 @@ class _CrearCitaPageState extends State<CrearCitaPage> {
   final TextEditingController _largoController = TextEditingController();
   final TextEditingController _pagoTotalController = TextEditingController();
 
-  // Método para crear la cita
   Future<void> _crearCita() async {
     if (_formKey.currentState!.validate()) {
       final response = await http.post(
-        Uri.parse('http://localhost:8000/citas'), // Cambia por tu URL
+        Uri.parse('http://localhost:8000/citas'), 
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -44,16 +41,12 @@ class _CrearCitaPageState extends State<CrearCitaPage> {
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        // Muestra un mensaje de éxito
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(responseBody['message'])),
         );
-        // Limpia los campos del formulario
         _formKey.currentState!.reset();
       } else {
-        // Maneja el error
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Error al crear la cita')),
         );

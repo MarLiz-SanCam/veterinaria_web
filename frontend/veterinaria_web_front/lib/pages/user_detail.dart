@@ -6,10 +6,8 @@ import 'dart:convert';
 import 'package:veterinaria_web_front/design/app_colors.dart';
 
 class UserDetail extends StatefulWidget {
-  final int idusuario; // Cambiado a int para el ID del usuario
-
-  UserDetail({required this.idusuario}); // Acepta solo el ID
-
+  final int idusuario; 
+  UserDetail({required this.idusuario}); 
   @override
   _UserDetailState createState() => _UserDetailState();
 }
@@ -27,21 +25,20 @@ class _UserDetailState extends State<UserDetail> {
   @override
   void initState() {
     super.initState();
-    _fetchUsuario(); // Llama a la función para obtener los detalles del usuario
+    _fetchUsuario(); 
   }
 
   Future<void> _fetchUsuario() async {
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:8000/usuarios/${widget.idusuario}'), // Cambia a tu endpoint
+        Uri.parse('http://localhost:8000/usuarios/${widget.idusuario}'), 
       );
 
       if (response.statusCode == 200) {
         final usuarioData = jsonDecode(response.body);
         
-        // Inicializa los controladores con los datos del usuario
         _idUsuarioController.text = usuarioData['idusuario'].toString();
-        _correoController.text = usuarioData['correo']; // Asumiendo que 'correo' es el nombre de usuario
+        _correoController.text = usuarioData['correo']; 
         _nombreController.text = usuarioData['nombre'];
         _apellidoController.text = usuarioData['apellido'];
       } else {
@@ -55,7 +52,7 @@ class _UserDetailState extends State<UserDetail> {
       });
     } finally {
       setState(() {
-        _isLoading = false; // Finaliza la carga
+        _isLoading = false; 
       });
     }
   }
@@ -68,7 +65,7 @@ class _UserDetailState extends State<UserDetail> {
 
     try {
       final response = await http.put(
-        Uri.parse('http://localhost:8000/usuarios/${widget.idusuario}'), // Cambia a tu endpoint
+        Uri.parse('http://localhost:8000/usuarios/${widget.idusuario}'), 
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -81,7 +78,7 @@ class _UserDetailState extends State<UserDetail> {
       );
 
       if (response.statusCode == 200) {
-        Navigator.pop(context, true); // Regresa a la lista si se actualiza correctamente
+        Navigator.pop(context, true); 
       } else {
         setState(() {
           message = 'Error al actualizar usuario: ${response.body}';
@@ -106,11 +103,11 @@ class _UserDetailState extends State<UserDetail> {
 
     try {
       final response = await http.delete(
-        Uri.parse('http://localhost:8000/usuarios/${widget.idusuario}'), // Cambia a tu endpoint
+        Uri.parse('http://localhost:8000/usuarios/${widget.idusuario}'), 
       );
 
       if (response.statusCode == 200) {
-        Navigator.pop(context, true); // Regresar a la lista si se elimina correctamente
+        Navigator.pop(context, true); 
       } else {
         setState(() {
           message = 'Error al eliminar usuario: ${response.body}';
@@ -140,14 +137,14 @@ class _UserDetailState extends State<UserDetail> {
             ElevatedButton(
               child: const Text('Cancelar'),
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo
+                Navigator.of(context).pop(); 
               },
             ),
             TextButton(
-              child: Text('Eliminar', style: TextStyle(color: colors.mainColor)), // Aplicado el estilo aquí
+              child: Text('Eliminar', style: TextStyle(color: colors.mainColor)), 
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo
-                _eliminarUsuario(); // Llama a la función de eliminar
+                Navigator.of(context).pop(); 
+                _eliminarUsuario(); 
               },
             ),
           ],
@@ -165,7 +162,7 @@ class _UserDetailState extends State<UserDetail> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView( // Agregado aquí
+          : SingleChildScrollView( 
               padding: const EdgeInsets.all(50.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +170,7 @@ class _UserDetailState extends State<UserDetail> {
                   TextField(
                     controller: _idUsuarioController,
                     decoration: const InputDecoration(labelText: 'ID de Usuario'),
-                    enabled: false, // Hace que el campo sea solo lectura
+                    enabled: false, 
                   ),
                   const SizedBox(height: 20),
                   TextField(

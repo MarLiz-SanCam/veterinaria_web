@@ -9,7 +9,7 @@ import 'package:veterinaria_web_front/pages/user_create.dart';
 import 'package:veterinaria_web_front/pages/user_detail.dart';
 
 class Usuario {
-  final int idusuario; // Asegúrate de que el tipo de dato coincida con tu base de datos
+  final int idusuario; 
   final String nombre;
   final String apellido;
   final String correo;
@@ -18,10 +18,10 @@ class Usuario {
 
   factory Usuario.fromJson(Map<String, dynamic> json) {
     return Usuario(
-      idusuario: json['idusuario'], // Asegúrate de que 'id' coincida con el nombre del campo en tu base de datos
-      nombre: json['nombre'], // Cambia 'nombre' por el campo correcto de tu base de datos
+      idusuario: json['idusuario'], 
+      nombre: json['nombre'], 
       apellido: json['apellido'],
-      correo: json['correo'] // Cambia 'apellido' por el campo correcto de tu base de datos
+      correo: json['correo'] 
     );
   }
 }
@@ -32,7 +32,7 @@ class CatalogoDeUsuarios extends StatefulWidget {
 }
 
 class _CatalogoDeUsuariosState extends State<CatalogoDeUsuarios> {
-  List<Usuario> usuarios = []; // Inicializa la lista aquí
+  List<Usuario> usuarios = []; 
   bool _isLoading = true;
   String message = '';
 
@@ -92,14 +92,13 @@ class _CatalogoDeUsuariosState extends State<CatalogoDeUsuarios> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                      //selectedTileColor: colors.mainColor,
                       tileColor: Colors.white,
                       leading: CircleAvatar(
                         backgroundColor: colors.mainColor,
-                        child: Text(usuario.nombre[0], style: TextStyle(color: colors.highlightColor),), // Inicial del nombre
+                        child: Text(usuario.nombre[0], style: TextStyle(color: colors.highlightColor),), 
                       ),
-                      title: Text('${usuario.nombre} ${usuario.apellido}'), // Nombre y Apellido en el title
-                      subtitle: Text(usuario.correo), // Correo en el subtitle// Solo el apellido
+                      title: Text('${usuario.nombre} ${usuario.apellido}'),
+                      subtitle: Text(usuario.correo), 
                       onTap: () {
                         Navigator.push(
                           context,
