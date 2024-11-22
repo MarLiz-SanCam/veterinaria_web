@@ -41,16 +41,13 @@ route.post('/propietarios', async (req, res) => {
     const { nombre, direccion, telefono } = req.body;
 
     try {
-        // Establecemos la opción de crear propietario
         await req.dbConnection.query(`
             SET @opcion = 1, @idPropietario = NULL, @nombre = ?, @direccion = ?, @telefono = ?, 
                 @valid = 0, @error = "";
         `, [nombre, direccion, telefono]);
 
-        // Llamamos al procedimiento almacenado para crear el propietario
         await req.dbConnection.query('CALL abcc_propietarios(@opcion, @idPropietario, @nombre, @direccion, @telefono, @valid, @error)');
         
-        // Obtenemos el resultado de la validación
         const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error');
         res.json(results[0]);
     } catch (error) {
@@ -64,16 +61,13 @@ route.delete('/propietarios/:idPropietario', async (req, res) => {
     const { idPropietario } = req.params;
 
     try {
-        // Establecemos la opción de eliminar propietario
         await req.dbConnection.query(`
             SET @opcion = 2, @idPropietario = ?, @nombre = NULL, @direccion = NULL, @telefono = NULL, 
                 @valid = 0, @error = "";
         `, [idPropietario]);
 
-        // Llamamos al procedimiento almacenado para eliminar el propietario
         await req.dbConnection.query('CALL abcc_propietarios(@opcion, @idPropietario, @nombre, @direccion, @telefono, @valid, @error)');
         
-        // Obtenemos el resultado de la validación
         const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error');
         res.json(results[0]);
     } catch (error) {
