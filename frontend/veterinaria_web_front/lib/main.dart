@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
        // iconTheme: const IconThemeData(
         //  color: Color.fromARGB(255, 246, 254, 254),
         //),
+        
         dialogTheme: DialogTheme(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
@@ -39,6 +40,12 @@ class MyApp extends StatelessWidget {
           labelStyle: TextStyle(
             color: Color.fromARGB(255, 107, 164, 163),
           ),
+        ),
+        appBarTheme: const AppBarTheme(
+          elevation: 4,
+          centerTitle: true,
+          backgroundColor: Color.fromARGB(255, 107, 164, 163),
+          
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(

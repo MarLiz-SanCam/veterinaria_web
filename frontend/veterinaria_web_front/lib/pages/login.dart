@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:veterinaria_web_front/design/app_colors.dart';
 import 'package:veterinaria_web_front/pages/home.dart';
 import 'package:veterinaria_web_front/pages/user_catalog.dart';
 
@@ -68,11 +67,8 @@ class _LogInPageState extends State<LogInPage> {
 
   @override
   Widget build(BuildContext context) {
-    var colors = Theme.of(context).extension<AppColors>()!;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: colors.mainColor,
-        title: const Text('Control Veterinario'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(50.0),

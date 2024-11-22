@@ -1,83 +1,109 @@
-// routes/propietarios.js
-const express = require('express');
-const router = express.Router();
+const { Router } = require('express');
+const route = Router();
 
 // Obtener todos los propietarios
-router.get('/propietarios', async (req, res) => {
-  try {
-    const [rows] = await req.dbConnection.query('SELECT * FROM propietarios');
-    res.json(rows);
-  } catch (error) {
-    console.error('Error al obtener los propietarios:', error);
-    res.status(500).json({ error: 'Error al obtener los propietarios' });
-  }
+route.get('/propietarios', async (req, res) => {
+    try {
+        // Establecemos la opción de consulta de todos los propietarios
+        await req.dbConnection.query(`
+            SET @opcion = 5, @idPropietario = NULL, @nombre = NULL, @direccion = NULL, @telefono = NULL, 
+                @valid = 0, @error = "";
+        `);
+
+        // Llamamos al procedimiento almacenado para obtener todos los propietarios
+        const [rows] = await req.dbConnection.query('CALL abcc_propietarios(@opcion, @idPropietario, @nombre, @direccion, @telefono, @valid, @error)');
+        res.json(rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener los propietarios' });
+    }
 });
 
 // Obtener un propietario por ID
-router.get('/propietarios/:id', async (req, res) => {
-  const { id } = req.params;
+route.get('/propietarios/:idPropietario', async (req, res) => {
+  const { idPropietario } = req.params;
   try {
-    const [rows] = await req.dbConnection.query('SELECT * FROM propietarios WHERE idPropietario = ?', [id]);
+    // Consultamos el propietario por su ID
+    const [rows] = await req.dbConnection.query('SELECT * FROM propietarios WHERE idPropietario = ?', [idPropietario]);
     if (rows.length > 0) {
       res.json(rows[0]);
     } else {
-      res.status(404).json({ error: 'Propietario no encontrado' });
+      res.status(404).json({ message: 'Propietario no encontrado' });
     }
   } catch (error) {
-    console.error('Error al obtener el propietario:', error);
-    res.status(500).json({ error: 'Error al obtener el propietario' });
+    console.error(error);
+    res.status(500).json({ message: 'Error al obtener el propietario' });
   }
 });
 
 // Crear un nuevo propietario
-router.post('/propietarios', async (req, res) => {
-  const { nombre, direccion, telefono } = req.body;
-  try {
-    const [result] = await req.dbConnection.query(
-      'INSERT INTO propietarios (nombre, direccion, telefono) VALUES (?, ?, ?)',
-      [nombre, direccion, telefono]
-    );
-    res.json({ message: 'Propietario creado exitosamente', idPropietario: result.insertId });
-  } catch (error) {
-    console.error('Error al crear el propietario:', error);
-    res.status(500).json({ error: 'Error al crear el propietario' });
-  }
-});
+route.post('/propietarios', async (req, res) => {
+    const { nombre, direccion, telefono } = req.body;
 
-// Actualizar un propietario existente
-router.put('/propietarios/:id', async (req, res) => {
-  const { id } = req.params;
-  const { nombre, direccion, telefono } = req.body;
-  try {
-    const [result] = await req.dbConnection.query(
-      'UPDATE propietarios SET nombre = ?, direccion = ?, telefono = ? WHERE idPropietario = ?',
-      [nombre, direccion, telefono, id]
-    );
-    if (result.affectedRows > 0) {
-      res.json({ message: 'Propietario actualizado exitosamente' });
-    } else {
-      res.status(404).json({ error: 'Propietario no encontrado' });
+    try {
+        // Establecemos la opción de crear propietario
+        await req.dbConnection.query(`
+            SET @opcion = 1, @idPropietario = NULL, @nombre = ?, @direccion = ?, @telefono = ?, 
+                @valid = 0, @error = "";
+        `, [nombre, direccion, telefono]);
+
+        // Llamamos al procedimiento almacenado para crear el propietario
+        await req.dbConnection.query('CALL abcc_propietarios(@opcion, @idPropietario, @nombre, @direccion, @telefono, @valid, @error)');
+        
+        // Obtenemos el resultado de la validación
+        const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error');
+        res.json(results[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al crear el propietario' });
     }
-  } catch (error) {
-    console.error('Error al actualizar el propietario:', error);
-    res.status(500).json({ error: 'Error al actualizar el propietario' });
-  }
 });
 
 // Eliminar un propietario
-router.delete('/propietarios/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const [result] = await req.dbConnection.query('DELETE FROM propietarios WHERE idPropietario = ?', [id]);
-    if (result.affectedRows > 0) {
-      res.json({ message: 'Propietario eliminado exitosamente' });
-    } else {
-      res.status(404).json({ error: 'Propietario no encontrado' });
+route.delete('/propietarios/:idPropietario', async (req, res) => {
+    const { idPropietario } = req.params;
+
+    try {
+        // Establecemos la opción de eliminar propietario
+        await req.dbConnection.query(`
+            SET @opcion = 2, @idPropietario = ?, @nombre = NULL, @direccion = NULL, @telefono = NULL, 
+                @valid = 0, @error = "";
+        `, [idPropietario]);
+
+        // Llamamos al procedimiento almacenado para eliminar el propietario
+        await req.dbConnection.query('CALL abcc_propietarios(@opcion, @idPropietario, @nombre, @direccion, @telefono, @valid, @error)');
+        
+        // Obtenemos el resultado de la validación
+        const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error');
+        res.json(results[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al eliminar el propietario' });
     }
-  } catch (error) {
-    console.error('Error al eliminar el propietario:', error);
-    res.status(500).json({ error: 'Error al eliminar el propietario' });
-  }
 });
 
-module.exports = router;
+// Editar un propietario
+route.put('/propietarios/:idPropietario', async (req, res) => {
+    const { idPropietario } = req.params;
+    const { nombre, direccion, telefono } = req.body;
+
+    try {
+        // Establecemos la opción de editar propietario
+        await req.dbConnection.query(`
+            SET @opcion = 3, @idPropietario = ?, @nombre = ?, @direccion = ?, @telefono = ?, 
+                @valid = 0, @error = "";
+        `, [idPropietario, nombre, direccion, telefono]);
+
+        // Llamamos al procedimiento almacenado para editar el propietario
+        await req.dbConnection.query('CALL abcc_propietarios(@opcion, @idPropietario, @nombre, @direccion, @telefono, @valid, @error)');
+        
+        // Obtenemos el resultado de la validación
+        const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error');
+        res.json(results[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al editar el propietario' });
+    }
+});
+
+module.exports = route;

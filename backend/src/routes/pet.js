@@ -1,83 +1,95 @@
-// routes/mascotas.js
-const express = require('express');
-const router = express.Router();
+const { Router } = require('express');
+const route = Router();
 
 // Obtener todas las mascotas
-router.get('/mascotas', async (req, res) => {
-  try {
-    const [rows] = await req.dbConnection.query('SELECT * FROM mascotas');
-    res.json(rows);
-  } catch (error) {
-    console.error('Error al obtener las mascotas:', error);
-    res.status(500).json({ error: 'Error al obtener las mascotas' });
-  }
+route.get('/mascotas', async (req, res) => {
+    try {
+        await req.dbConnection.query(`
+            SET @opcion = 5, @idMascota = NULL, @especimen = NULL, @raza = NULL, 
+                @iddueño = NULL, @nombre = NULL, @nacimiento = NULL, @valid = 0, @error = "";
+        `);
+
+        const [rows] = await req.dbConnection.query('CALL abcc_mascotas(@opcion, @idMascota, @especimen, @raza, @iddueño, @nombre, @nacimiento, @valid, @error)');
+        res.json(rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener las mascotas' });
+    }
 });
 
-// Obtener una mascota por ID
-router.get('/mascotas/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const [rows] = await req.dbConnection.query('SELECT * FROM mascotas WHERE idMascota = ?', [id]);
-    if (rows.length > 0) {
-      res.json(rows[0]);
-    } else {
-      res.status(404).json({ error: 'Mascota no encontrada' });
+// Obtener una mascota específica
+route.get('/mascotas/:idMascota', async (req, res) => {
+    const { idMascota } = req.params;
+    try {
+        console.log('Buscando mascota');
+        const [rows] = await req.dbConnection.query('SELECT * FROM mascotas WHERE idMascota = ?', [idMascota]);
+        if (rows.length > 0) {
+            res.json(rows[0]);
+        } else {
+            res.status(404).json({ message: 'Mascota no encontrada' });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error al obtener la mascota' });
     }
-  } catch (error) {
-    console.error('Error al obtener la mascota:', error);
-    res.status(500).json({ error: 'Error al obtener la mascota' });
-  }
 });
 
 // Crear una nueva mascota
-router.post('/mascotas', async (req, res) => {
-  const { especimen, raza, iddueño, nombre, nacimiento } = req.body;
-  try {
-    const [result] = await req.dbConnection.query(
-      'INSERT INTO mascotas (especimen, raza, iddueño, nombre, nacimiento) VALUES (?, ?, ?, ?, ?)',
-      [especimen, raza, iddueño, nombre, nacimiento]
-    );
-    res.json({ message: 'Mascota creada exitosamente', idMascota: result.insertId });
-  } catch (error) {
-    console.error('Error al crear la mascota:', error);
-    res.status(500).json({ error: 'Error al crear la mascota' });
-  }
-});
+route.post('/mascotas', async (req, res) => {
+    const { especimen, raza, iddueño, nombre, nacimiento } = req.body;
 
-// Actualizar una mascota existente
-router.put('/mascotas/:id', async (req, res) => {
-  const { id } = req.params;
-  const { especimen, raza, iddueño, nombre, nacimiento } = req.body;
-  try {
-    const [result] = await req.dbConnection.query(
-      'UPDATE mascotas SET especimen = ?, raza = ?, iddueño = ?, nombre = ?, nacimiento = ? WHERE idMascota = ?',
-      [especimen, raza, iddueño, nombre, nacimiento, id]
-    );
-    if (result.affectedRows > 0) {
-      res.json({ message: 'Mascota actualizada exitosamente' });
-    } else {
-      res.status(404).json({ error: 'Mascota no encontrada' });
+    try {
+        await req.dbConnection.query(`
+            SET @opcion = 1, @idMascota = NULL, @especimen = ?, @raza = ?, 
+                @iddueño = ?, @nombre = ?, @nacimiento = ?, @valid = 0, @error = "";
+        `, [especimen, raza, iddueño, nombre, nacimiento]);
+
+        await req.dbConnection.query('CALL abcc_mascotas(@opcion, @idMascota, @especimen, @raza, @iddueño, @nombre, @nacimiento, @valid, @error)');
+        const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error');
+        res.json(results[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al crear la mascota' });
     }
-  } catch (error) {
-    console.error('Error al actualizar la mascota:', error);
-    res.status(500).json({ error: 'Error al actualizar la mascota' });
-  }
 });
 
 // Eliminar una mascota
-router.delete('/mascotas/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const [result] = await req.dbConnection.query('DELETE FROM mascotas WHERE idMascota = ?', [id]);
-    if (result.affectedRows > 0) {
-      res.json({ message: 'Mascota eliminada exitosamente' });
-    } else {
-      res.status(404).json({ error: 'Mascota no encontrada' });
+route.delete('/mascotas/:idMascota', async (req, res) => {
+    const { idMascota } = req.params;
+
+    try {
+        await req.dbConnection.query(`
+            SET @opcion = 2, @idMascota = ?, @especimen = NULL, @raza = NULL, 
+                @iddueño = NULL, @nombre = NULL, @nacimiento = NULL, @valid = 0, @error = "";
+        `, [idMascota]);
+
+        await req.dbConnection.query('CALL abcc_mascotas(@opcion, @idMascota, @especimen, @raza, @iddueño, @nombre, @nacimiento, @valid, @error)');
+        const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error');
+        res.json(results[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al eliminar la mascota' });
     }
-  } catch (error) {
-    console.error('Error al eliminar la mascota:', error);
-    res.status(500).json({ error: 'Error al eliminar la mascota' });
-  }
 });
 
-module.exports = router;
+// Editar una mascota
+route.put('/mascotas/:idMascota', async (req, res) => {
+    const { idMascota } = req.params;
+    const { especimen, raza, iddueño, nombre, nacimiento } = req.body;
+
+    try {
+        await req.dbConnection.query(`
+            SET @opcion = 3, @idMascota = ?, @especimen = ?, @raza = ?, 
+                @iddueño = ?, @nombre = ?, @nacimiento = ?, @valid = 0, @error = "";
+        `, [idMascota, especimen, raza, iddueño, nombre, nacimiento]);
+
+        await req.dbConnection.query('CALL abcc_mascotas(@opcion, @idMascota, @especimen, @raza, @iddueño, @nombre, @nacimiento, @valid, @error)');
+        const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error');
+        res.json(results[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al editar la mascota' });
+    }
+});
+
+module.exports = route;

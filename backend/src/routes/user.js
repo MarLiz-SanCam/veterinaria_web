@@ -47,7 +47,7 @@ route.post('/usuarios', async (req, res) => {
         );
 
         await req.dbConnection.query(
-            'CALL p_opcion(@opcion, @id_usuario, @nombre, @apellido, @correo, @clave, @valid, @error, @fecha)'
+            'CALL abcc_users(@opcion, @id_usuario, @nombre, @apellido, @correo, @clave, @valid, @error, @fecha)'
         );
 
         const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error, @fecha AS fecha');
@@ -69,20 +69,12 @@ route.post('/login', async (req, res) => {
 
     try {
         await req.dbConnection.query(`
-            SET @opcion = 5, 
-                @id_usuario = NULL, 
-                @nombre = NULL, 
-                @apellido = NULL, 
-                @correo = ?, 
-                @clave = ?, 
-                @valid = 0, 
-                @error = "", 
-                @fecha = NOW();
-            `, [correo, clave]
+            SET @opcion = 5, @id_usuario = NULL, @nombre = NULL, @apellido = NULL, @correo = ?, @clave = ?, @valid = 0, @error = "", @fecha = NOW();`, 
+            [correo, clave]
         );
 
         await req.dbConnection.query(
-            'CALL p_opcion(@opcion, @id_usuario, @nombre, @apellido, @correo, @clave, @valid, @error, @fecha)'
+            'CALL abcc_users(@opcion, @id_usuario, @nombre, @apellido, @correo, @clave, @valid, @error, @fecha)'
         );
 
         const [results] = await req.dbConnection.query(
@@ -116,7 +108,7 @@ route.delete('/usuarios/:idusuario', async (req, res) => {
         );
 
         await req.dbConnection.query(
-            'CALL p_opcion(@opcion, @id_usuario, @nombre, @apellido, @email, @password, @valid, @error, @fecha)'
+            'CALL abcc_users(@opcion, @id_usuario, @nombre, @apellido, @email, @password, @valid, @error, @fecha)'
         );
 
         const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error, @fecha AS fecha');
@@ -147,7 +139,7 @@ route.put('/usuarios/:idusuario', async (req, res) => {
         );
 
         await req.dbConnection.query(
-            'CALL p_opcion(@opcion, @id_usuario, @nombre, @apellido, @correo, @clave, @valid, @error, @fecha)'
+            'CALL abcc_users(@opcion, @id_usuario, @nombre, @apellido, @correo, @clave, @valid, @error, @fecha)'
         );
 
         const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error, @fecha AS fecha');
