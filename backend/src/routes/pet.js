@@ -38,6 +38,10 @@ route.get('/mascotas/:idMascota', async (req, res) => {
 route.post('/mascotas', async (req, res) => {
     const { especimen, raza, iddueño, nombre, nacimiento } = req.body;
 
+    if (!especimen || !raza || !iddueño || !nombre || !nacimiento) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
     try {
         await req.dbConnection.query(`
             SET @opcion = 1, @idMascota = NULL, @especimen = ?, @raza = ?, 
@@ -45,17 +49,28 @@ route.post('/mascotas', async (req, res) => {
         `, [especimen, raza, iddueño, nombre, nacimiento]);
 
         await req.dbConnection.query('CALL abcc_mascotas(@opcion, @idMascota, @especimen, @raza, @iddueño, @nombre, @nacimiento, @valid, @error)');
+        
         const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error');
-        res.json(results[0]);
+        
+        if (results[0].valid === 1) {
+            res.json({ message: 'Mascota agregada correctamente' });
+        } else {
+            res.status(400).json({ message: `Error: ${results[0].error}` });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al crear la mascota' });
     }
 });
 
+
 // Eliminar una mascota
 route.delete('/mascotas/:idMascota', async (req, res) => {
     const { idMascota } = req.params;
+
+    if (!idMascota) {
+        return res.status(400).json({ message: 'El ID de la mascota es requerido' });
+    }
 
     try {
         await req.dbConnection.query(`
@@ -64,8 +79,15 @@ route.delete('/mascotas/:idMascota', async (req, res) => {
         `, [idMascota]);
 
         await req.dbConnection.query('CALL abcc_mascotas(@opcion, @idMascota, @especimen, @raza, @iddueño, @nombre, @nacimiento, @valid, @error)');
+
         const [results] = await req.dbConnection.query('SELECT @valid AS valid, @error AS error');
-        res.json(results[0]);
+
+        // Comprobamos si hay un error en la ejecución
+        if (results[0].valid == 1) {
+            res.json({ message: 'Mascota eliminada correctamente' });
+        } else {
+            res.status(400).json({ message: `Error: ${results[0].error}` });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al eliminar la mascota' });

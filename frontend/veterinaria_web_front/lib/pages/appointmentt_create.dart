@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -41,7 +43,6 @@ class _CrearCitaPageState extends State<CrearCitaPage> {
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(responseBody['message'])),
         );

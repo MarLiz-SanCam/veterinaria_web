@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:veterinaria_web_front/design/app_colors.dart';
 import 'package:veterinaria_web_front/pages/appointmentt_create.dart';
+import 'package:veterinaria_web_front/pages/pet_catalog.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -108,7 +109,7 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 title: Text('Mascotas'),
                 onTap: () {
-                  // TODO: Navegar a la pantalla de mascotas
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => PetCatalog()));
                 },
               ),
             ],
